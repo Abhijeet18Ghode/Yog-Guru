@@ -81,15 +81,23 @@ export default function AdminPanel() {
         method: 'POST',
         body: formDataUpload
       });
+      
+      if (!res.ok) {
+        throw new Error(`Upload failed: ${res.status}`);
+      }
+      
       const data = await res.json();
       if (data.success) {
         setFormData({
           ...formData,
           content: { ...formData.content, image: data.url }
         });
+      } else {
+        alert(`Upload failed: ${data.error}`);
       }
     } catch (error) {
       console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
