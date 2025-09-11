@@ -2,7 +2,13 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -16,9 +22,58 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Admin Panel Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Seed the database** (first time only):
+   ```bash
+   curl -X POST http://localhost:3000/api/seed
+   ```
+
+2. **Access admin panel**:
+   - URL: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
+   - Email: `admin@youguru.com`
+   - Password: `admin123`
+
+3. **Admin Features**:
+   - Manage Hero Section content
+   - Create/Edit Blog posts
+   - Update Session types and pricing
+   - Modify Contact information
+   - Site settings management
+
+## Environment Variables
+
+Create `.env.local` file with:
+
+```
+MONGO_URI=your_mongodb_connection_string
+DB_NAME=youguru
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRE=30d
+JWT_COOKIE_EXPIRE=30
+CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+WHATSAPP_NUMBER=your_whatsapp_number
+```
+
+## Dynamic Components
+
+The following components are now dynamic and manageable via admin panel:
+
+- **Hero Section**: Title, subtitle, features, CTA buttons
+- **Blog Posts**: Full CRUD operations
+- **Session Types**: Pricing, descriptions, packages
+- **Contact Info**: Phone, email, address, hours
+- **Site Settings**: General configuration
+
+## API Routes
+
+- `POST /api/auth/login` - Admin authentication
+- `GET /api/content?type=hero` - Fetch content by type
+- `POST /api/content` - Create new content
+- `PUT /api/content` - Update existing content
+- `POST /api/seed` - Initialize database
 
 ## Learn More
 

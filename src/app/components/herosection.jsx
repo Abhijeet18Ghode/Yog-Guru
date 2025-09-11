@@ -1,8 +1,35 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 const HeroSection = () => {
+  const [heroContent, setHeroContent] = useState(null);
+
+  useEffect(() => {
+    const fetchHeroContent = async () => {
+      try {
+        const res = await fetch('/api/content?type=hero');
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+          setHeroContent(data.data[0]);
+        }
+      } catch (error) {
+        console.error('Error fetching hero content:', error);
+      }
+    };
+    fetchHeroContent();
+  }, []);
+
+  const defaultContent = {
+    title: 'Ancient Yoga Journey',
+    content: {
+      subtitle: 'Find Your Inner Peace with Expert Yoga Instructors',
+      description: 'Embark on a transformative journey through ancient wisdom and modern practice'
+    }
+  };
+
+  const content = heroContent || defaultContent;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Background Pattern */}
@@ -44,9 +71,7 @@ const HeroSection = () => {
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light text-amber-900 leading-tight">
-                <span className="block font-serif italic text-orange-800">Ancient</span>
-                <span className="block font-bold text-amber-800">YOGA</span>
-                <span className="block text-3xl sm:text-4xl lg:text-5xl text-amber-700">Journey</span>
+                {content.title || 'Ancient Yoga Journey'}
               </h1>
               
               {/* Sanskrit Om Symbol */}
@@ -58,10 +83,10 @@ const HeroSection = () => {
             {/* Tagline */}
             <div className="space-y-2">
               <p className="text-xl sm:text-2xl text-amber-800 font-light italic">
-                "Find Your Inner Peace with Expert Yoga Instructors"
+                "{content.content?.subtitle || 'Find Your Inner Peace with Expert Yoga Instructors'}"
               </p>
               <p className="text-base sm:text-lg text-amber-700/80 max-w-lg mx-auto lg:mx-0">
-                Embark on a transformative journey through ancient wisdom and modern practice
+                {content.content?.description || 'Embark on a transformative journey through ancient wisdom and modern practice'}
               </p>
             </div>
 

@@ -1,58 +1,24 @@
 "use client";
-// pages/blog.jsx
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
 
 const Blog = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: "The Origins of Hatha Yoga",
-      excerpt: "Explore the ancient roots of Hatha Yoga and its transformation through the centuries.",
-      image: "/api/placeholder/400/250?text=Hatha+Yoga",
-      readTime: "5 min read",
-      category: "History"
-    },
-    {
-      id: 2,
-      title: "Pranayama Breathing Techniques",
-      excerpt: "Learn seven ancient breathing techniques that enhance vitality and mental clarity.",
-      image: "/api/placeholder/400/250?text=Pranayama",
-      readTime: "7 min read",
-      category: "Practice"
-    },
-    {
-      id: 3,
-      title: "Sacred Mantras and Their Meanings",
-      excerpt: "Discover the power of sacred sounds used in yoga tradition for millennia.",
-      image: "/api/placeholder/400/250?text=Mantras",
-      readTime: "6 min read",
-      category: "Philosophy"
-    },
-    {
-      id: 4,
-      title: "Ayurveda and Yoga: Sister Sciences",
-      excerpt: "Understand how these two ancient Indian disciplines complement each other.",
-      image: "/api/placeholder/400/250?text=Ayurveda",
-      readTime: "8 min read",
-      category: "Wellness"
-    },
-    {
-      id: 5,
-      title: "The Seven Chakras Explained",
-      excerpt: "A journey through the energy centers of the body according to yogic tradition.",
-      image: "/api/placeholder/400/250?text=Chakras",
-      readTime: "10 min read",
-      category: "Energy"
-    },
-    {
-      id: 6,
-      title: "Meditation Practices of the Sages",
-      excerpt: "Ancient meditation techniques that have been passed down through generations.",
-      image: "/api/placeholder/400/250?text=Meditation",
-      readTime: "9 min read",
-      category: "Spirituality"
-    }
-  ];
+  const [blogPosts, setBlogPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const res = await fetch('/api/content?type=blog');
+        const data = await res.json();
+        if (data.success) {
+          setBlogPosts(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+      }
+    };
+    fetchBlogPosts();
+  }, []);
 
   return (
     <div className="min-h-screen bg-amber-50">
@@ -87,25 +53,30 @@ const Blog = () => {
       {/* Blog Posts Grid */}
       <main id="blogs" className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {blogPosts.length === 0 && (
+            <div className="col-span-full text-center py-12">
+              <p className="text-amber-700">No blog posts available. Add some from the admin panel!</p>
+            </div>
+          )}
           {blogPosts.map((post) => (
             <div 
-              key={post.id} 
+              key={post._id} 
               className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:translate-y-2 hover:shadow-xl"
             >
               <div className="relative overflow-hidden h-48">
                 <img 
-                  src={post.image} 
+                  src={post.content?.image || '/api/placeholder/400/250?text=Blog+Image'} 
                   alt={post.title}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
                 <div className="absolute top-4 right-4 bg-amber-700 text-white px-3 py-1 rounded-full text-sm">
-                  {post.category}
+                  {post.content?.category || 'Yoga'}
                 </div>
               </div>
               
               <div className="p-6">
                 <div className="flex items-center text-sm text-amber-600 mb-2">
-                  <span>{post.readTime}</span>
+                  <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                 </div>
                 
                 <h2 className="text-2xl font-serif font-semibold text-amber-900 mb-3">
@@ -113,11 +84,11 @@ const Blog = () => {
                 </h2>
                 
                 <p className="text-amber-700 mb-4">
-                  {post.excerpt}
+                  {post.content?.excerpt || 'Read this amazing yoga article...'}
                 </p>
                 
                 <button 
-                  onClick={() => window.open(`/blog/${post.id}`, '_blank')}
+                  onClick={() => window.open(`/blog/${post._id}`, '_blank')}
                   className="flex items-center text-amber-700 font-medium group hover:text-amber-600 transition-colors"
                   aria-label={`Read more about ${post.title}`}
                 >

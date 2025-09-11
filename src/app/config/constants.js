@@ -1,8 +1,8 @@
 // Configuration constants for the Yog Guru application
 
 export const CONTACT_INFO = {
-  phone: '+1 (555) 123-4567',
-  whatsapp: '1234567890', // Replace with actual WhatsApp number
+  phone: '+91 9881012691',
+  whatsapp: process.env.WHATSAPP_NUMBER || '9881012691',
   email: 'info@ancientyoga.com',
   address: '123 Serenity Lane, Peace Valley',
   hours: 'Daily: 6AM - 8PM'

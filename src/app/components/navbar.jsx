@@ -97,7 +97,7 @@ const Navbar = () => {
                   <span className="relative z-10 text-sm tracking-wider font-semibold block">
                     {item.name}
                   </span>
-                  <span className="text-xs text-amber-400/70 block mt-1 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                  <span className="text-xs text-white block mt-1 transition-all duration-300">
                     {item.sanskrit}
                   </span>
                 </div>

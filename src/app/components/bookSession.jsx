@@ -2,11 +2,27 @@
 "use client"
 import Head from 'next/head';
 import { useRouter } from 'next/navigation';
-
+import { useState, useEffect } from 'react';
 import { CONTACT_INFO, MESSAGES } from '../config/constants';
 
 const BookSession = () => {
   const router = useRouter();
+  const [sessionTypes, setSessionTypes] = useState([]);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const res = await fetch('/api/content?type=session');
+        const data = await res.json();
+        if (data.success) {
+          setSessionTypes(data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching sessions:', error);
+      }
+    };
+    fetchSessions();
+  }, []);
 
   const handleWhatsAppRedirect = () => {
     const message = encodeURIComponent(MESSAGES.whatsappBooking);
@@ -18,13 +34,6 @@ const BookSession = () => {
     { icon: '💪', title: 'Strength', description: 'Build physical and mental resilience with ancient postures' },
     { icon: '🌿', title: 'Natural Healing', description: 'Tap into the body\'s innate healing capabilities' },
     { icon: '🕉️', title: 'Spiritual Growth', description: 'Connect with your higher self through traditional practices' }
-  ];
-
-  const sessionTypes = [
-    { name: 'Hatha Yoga', duration: '60 mins', price: '$40', description: 'Traditional physical practice focusing on postures and breathing' },
-    { name: 'Pranayama', duration: '45 mins', price: '$30', description: 'Breathing techniques to control life force energy' },
-    { name: 'Meditation', duration: '60 mins', price: '$35', description: 'Guided meditation for mental clarity and peace' },
-    { name: 'Ayurvedic Consultation', duration: '90 mins', price: '$75', description: 'Personalized wellness plan based on ancient wisdom' }
   ];
 
   return (
@@ -104,19 +113,25 @@ const BookSession = () => {
               <h2 className="text-3xl font-serif font-semibold text-amber-900 mb-8 text-center">Session Options</h2>
               
               <div className="space-y-6 mb-10">
-                {sessionTypes.map((session, index) => (
-                  <div key={index} className="border border-amber-200 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-semibold text-amber-800">{session.name}</h3>
-                      <span className="bg-amber-100 text-amber-800 py-1 px-3 rounded-full text-sm">{session.duration}</span>
-                    </div>
-                    <p className="text-amber-700 mb-4">{session.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-2xl font-semibold text-amber-900">{session.price}</span>
-                      <span className="text-sm text-amber-600">Per session</span>
-                    </div>
+                {sessionTypes.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-amber-700">No sessions available. Add some from the admin panel!</p>
                   </div>
-                ))}
+                ) : (
+                  sessionTypes.map((session, index) => (
+                    <div key={session._id || index} className="border border-amber-200 rounded-xl p-6 transition-all duration-300 hover:shadow-md">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-xl font-semibold text-amber-800">{session.title}</h3>
+                        <span className="bg-amber-100 text-amber-800 py-1 px-3 rounded-full text-sm">{session.content?.duration}</span>
+                      </div>
+                      <p className="text-amber-700 mb-4">{session.content?.description}</p>
+                      <div className="flex justify-between items-center">
+                        <span className="text-2xl font-semibold text-amber-900">{session.content?.price}</span>
+                        <span className="text-sm text-amber-600">Per session</span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
               
               <div className="bg-amber-100 rounded-xl p-6 border border-amber-200 mb-8">

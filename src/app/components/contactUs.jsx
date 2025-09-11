@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MESSAGES, CONTACT_INFO } from '../config/constants';
 
 export default function ContactUs() {
@@ -9,9 +9,24 @@ export default function ContactUs() {
     email: '',
     message: ''
   });
-
+  const [contactInfo, setContactInfo] = useState(CONTACT_INFO);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+
+  useEffect(() => {
+    const fetchContactInfo = async () => {
+      try {
+        const res = await fetch('/api/content?type=contact');
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+          setContactInfo(data.data[0].content);
+        }
+      } catch (error) {
+        console.error('Error fetching contact info:', error);
+      }
+    };
+    fetchContactInfo();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,13 +129,16 @@ export default function ContactUs() {
         <h3 className="info-title">Other Ways to Reach Us</h3>
         <div className="info-details">
           <p className="info-item">
-            <strong>Email:</strong> {CONTACT_INFO.email}
+            <strong>Email:</strong> {contactInfo.email}
           </p>
           <p className="info-item">
-            <strong>Phone:</strong> {CONTACT_INFO.phone}
+            <strong>Phone:</strong> {contactInfo.phone}
           </p>
           <p className="info-item">
-            <strong>Hours:</strong> {CONTACT_INFO.hours}
+            <strong>Address:</strong> {contactInfo.address}
+          </p>
+          <p className="info-item">
+            <strong>Hours:</strong> {contactInfo.hours}
           </p>
         </div>
       </div>
