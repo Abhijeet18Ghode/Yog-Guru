@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-:root {
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -24,18 +24,18 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   scroll-behavior: smooth;
-}
+} */
 
 /* Ensure proper spacing for fixed navbar */
-html {
+/* html {
   scroll-padding-top: 6rem;
-}
+} */
 
 /* Custom scrollbar for webkit browsers */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 8px;
-}
-
+} */
+/* 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
@@ -43,8 +43,8 @@ html {
 ::-webkit-scrollbar-thumb {
   background: #d97706;
   border-radius: 4px;
-}
-
+} */
+/* 
 ::-webkit-scrollbar-thumb:hover {
   background: #b45309;
-}
+} */
