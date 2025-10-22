@@ -54,7 +54,7 @@ export default function BlogsPage() {
               🌼 Read — Reflect — Realize
             </div>
             <p className="text-lg md:text-xl text-rose-700 leading-relaxed italic max-w-4xl mx-auto">
-              "Each blog is a conversation between today's confusion and yesterday's eternal truth."
+              &quot;Each blog is a conversation between today&apos;s confusion and yesterday&apos;s eternal truth.&quot;
             </p>
           </div>
 
