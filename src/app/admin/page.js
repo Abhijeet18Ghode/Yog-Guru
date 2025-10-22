@@ -10,7 +10,7 @@ export default function AdminPanel() {
 
   const tabs = [
     { id: 'hero', name: 'Hero Section' },
-    { id: 'blog', name: 'Blog Posts' },
+    { id: 'blogs', name: 'Blog Management' },
     { id: 'session', name: 'Sessions' },
     { id: 'contact', name: 'Contact Info' },
     { id: 'settings', name: 'Settings' }
@@ -273,7 +273,13 @@ export default function AdminPanel() {
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => {
+                    if (tab.id === 'blogs') {
+                      window.location.href = '/admin/blogs';
+                    } else {
+                      setActiveTab(tab.id);
+                    }
+                  }}
                   className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium ${
                     activeTab === tab.id
                       ? 'bg-amber-100 text-amber-700'

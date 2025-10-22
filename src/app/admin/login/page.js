@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 export default function AdminLogin() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       const res = await fetch('/api/auth/login', {
@@ -21,10 +23,11 @@ export default function AdminLogin() {
       if (res.ok) {
         router.push('/admin');
       } else {
-        alert('Invalid credentials');
+        const data = await res.json();
+        setError(data.error || 'Invalid credentials');
       }
     } catch (error) {
-      alert('Login failed');
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -39,6 +42,11 @@ export default function AdminLogin() {
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
           <div>
             <input
               type="email"

@@ -2,20 +2,23 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Content from '@/models/Content';
+import crypto from 'crypto';
 
 async function seedDatabase() {
   try {
     await dbConnect();
 
-    // Create admin user
+    // Create admin user with secure password
     const adminExists = await User.findOne({ email: 'admin@youguru.com' });
     if (!adminExists) {
-      await User.create({
+      const securePassword = process.env.ADMIN_PASSWORD || crypto.randomBytes(16).toString('hex');
+      const admin = await User.create({
         name: 'Admin',
         email: 'admin@youguru.com',
-        password: 'admin123',
+        password: securePassword,
         role: 'admin'
       });
+      console.log(`Admin created with password: ${securePassword}`);
     }
 
     // Seed hero content

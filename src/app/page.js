@@ -1,8 +1,11 @@
 import Navbar from './components/navbar';
 import HeroSection from './components/herosection';
-import ContactUs from './components/contactUs';
-import BookSession from './components/bookSession';
+import WelcomeVision from './components/welcomeVision';
 import Blog from './components/blog';
+import YogicTechniques from './components/yogicTechniques';
+import YogicLibrary from './components/yogicLibrary';
+import YogicResearch from './components/yogicResearch';
+import ContactUs from './components/contactUs';
 import Footer from './components/footer';
 
 export default function Home() {
@@ -10,8 +13,11 @@ export default function Home() {
     <>
       <Navbar />
       <HeroSection />
+      <WelcomeVision />
       <Blog />
-      <BookSession />
+      <YogicTechniques />
+      <YogicLibrary />
+      <YogicResearch />
       <ContactUs />
       <Footer />
     </>

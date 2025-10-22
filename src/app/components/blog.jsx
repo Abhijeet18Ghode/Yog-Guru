@@ -1,5 +1,4 @@
 "use client";
-import Head from 'next/head';
 import { useState, useEffect } from 'react';
 
 const Blog = () => {
@@ -8,10 +7,17 @@ const Blog = () => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const res = await fetch('/api/content?type=blog');
+        const res = await fetch('/api/blogs');
         const data = await res.json();
         if (data.success) {
-          setBlogPosts(data.data);
+          setBlogPosts(data.data.slice(0, 6)); // Show only first 6 blogs on homepage
+        } else {
+          // Fallback to local storage
+          const localRes = await fetch('/api/blogs-local');
+          const localData = await localRes.json();
+          if (localData.success) {
+            setBlogPosts(localData.data.slice(0, 6));
+          }
         }
       } catch (error) {
         console.error('Error fetching blog posts:', error);
@@ -20,143 +26,130 @@ const Blog = () => {
     fetchBlogPosts();
   }, []);
 
-  return (
-    <div className="min-h-screen bg-amber-50">
-      <Head>
-        <title>Ancient Wisdom | Yoga Blog</title>
-        <meta name="description" content="Discover ancient yoga wisdom and practices" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+  const featuredBlogs = [
+    {
+      title: "🧘 Overthinking & Restlessness — Insights from Yoga Vasistha",
+      excerpt: "Ancient wisdom to calm the restless mind and find inner peace through timeless teachings."
+    },
+    {
+      title: "💫 Bhagavad Gita for Daily Work — Yoga of Action", 
+      excerpt: "Transform your daily work into spiritual practice with Krishna's teachings on Karma Yoga."
+    },
+    {
+      title: "💖 From Emotion to Devotion — True Meaning of Bhakti",
+      excerpt: "Discover how to channel emotions into divine love and spiritual awakening."
+    },
+    {
+      title: "🔥 The Mind According to Patanjali — How to Master It",
+      excerpt: "Practical insights from Yoga Sutras to understand and control the fluctuations of mind."
+    },
+    {
+      title: "🌍 Living Consciously in a Digital World — The Yogic Way",
+      excerpt: "Ancient principles for maintaining spiritual balance in our modern digital age."
+    }
+  ];
 
-      {/* Header */}
-      <header className="relative py-12 bg-gradient-to-b from-amber-100 to-amber-50 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-10 left-20 w-72 h-72 bg-amber-600 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
-          <div className="absolute top-10 right-20 w-72 h-72 bg-rose-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-40 w-72 h-72 bg-emerald-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold text-center text-amber-900 mb-4">
-            Ancient Wisdom
-          </h1>
-          <p className="text-xl text-amber-800 text-center max-w-2xl mx-auto">
-            Explore the timeless teachings of yoga through our collection of articles
-          </p>
-          
-          <div className="flex justify-center mt-8">
-            <div className="w-24 h-1 bg-amber-700 rounded-full"></div>
+  return (
+    <section id="blogs" className="py-20 bg-gradient-to-br from-pink-50 to-rose-50">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-light text-rose-900 mb-6">
+            📖 Blogs — Modern Problems, Ancient Solutions
+          </h2>
+          <div className="text-2xl md:text-3xl text-rose-800 font-light mb-8">
+            🌼 Read — Reflect — Realize
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <p className="text-lg md:text-xl text-rose-700 leading-relaxed italic">
+              "Each blog is a conversation between today's confusion and yesterday's eternal truth."
+            </p>
           </div>
         </div>
-      </header>
 
-      {/* Blog Posts Grid */}
-      <main id="blogs" className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {blogPosts.length === 0 && (
-            <div className="col-span-full text-center py-12">
-              <p className="text-amber-700">No blog posts available. Add some from the admin panel!</p>
-            </div>
-          )}
-          {blogPosts.map((post) => (
-            <div 
-              key={post._id} 
-              className="bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:translate-y-2 hover:shadow-xl"
-            >
-              <div className="relative overflow-hidden h-48">
-                <img 
-                  src={post.content?.image || '/api/placeholder/400/250?text=Blog+Image'} 
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-                <div className="absolute top-4 right-4 bg-amber-700 text-white px-3 py-1 rounded-full text-sm">
-                  {post.content?.category || 'Yoga'}
-                </div>
+        {/* Featured Blog Tiles */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {/* Show featured blogs if no dynamic content */}
+          {blogPosts.length === 0 && featuredBlogs.map((blog, index) => (
+            <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
+              <div className="mb-4">
+                <h3 className="text-xl font-semibold text-rose-900 mb-3 leading-tight">
+                  {blog.title}
+                </h3>
+                <p className="text-rose-700 leading-relaxed mb-4">
+                  {blog.excerpt}
+                </p>
               </div>
               
-              <div className="p-6">
-                <div className="flex items-center text-sm text-amber-600 mb-2">
-                  <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+              <div className="flex justify-between items-center">
+                <button className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                  Read More
+                </button>
+                <div className="text-rose-400 text-sm">
+                  {new Date().toLocaleDateString()}
                 </div>
-                
-                <h2 className="text-2xl font-serif font-semibold text-amber-900 mb-3">
+              </div>
+            </div>
+          ))}
+
+          {/* Show dynamic blog posts */}
+          {blogPosts.map((post) => (
+            <div key={post._id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
+              {post.imagePath && (
+                <div className="mb-4 rounded-xl overflow-hidden">
+                  <img 
+                    src={post.imagePath} 
+                    alt={post.title}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              )}
+              
+              <div className="mb-4">
+                <h3 className="text-xl font-semibold text-rose-900 mb-3 leading-tight">
                   {post.title}
-                </h2>
-                
-                <p className="text-amber-700 mb-4">
-                  {post.content?.excerpt || 'Read this amazing yoga article...'}
+                </h3>
+                <p className="text-rose-700 leading-relaxed mb-4">
+                  {post.shortDescription || 'Discover ancient wisdom for modern challenges...'}
                 </p>
-                
+              </div>
+              
+              <div className="flex justify-between items-center">
                 <button 
-                  onClick={() => window.open(`/blog/${post._id}`, '_blank')}
-                  className="flex items-center text-amber-700 font-medium group hover:text-amber-600 transition-colors"
-                  aria-label={`Read more about ${post.title}`}
+                  onClick={() => window.location.href = `/blogs/${post._id}`}
+                  className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
                 >
                   Read More
-                  <svg 
-                    className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24" 
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                  </svg>
                 </button>
+                <div className="text-rose-400 text-sm">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </main>
 
-      {/* Footer */}
-      {/* <footer className="bg-amber-900 text-amber-100 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-amber-700 flex items-center justify-center">
-              <svg 
-                className="w-8 h-8 text-amber-100" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path>
-              </svg>
-            </div>
-          </div>
-          
-          <p className="text-lg font-serif mb-4">Ancient Wisdom Yoga Blog</p>
-          <p className="text-amber-200 max-w-lg mx-auto">
-            Connecting modern practitioners with the ancient roots of yoga through knowledge and practice.
-          </p>
-          
-          <div className="mt-8 pt-8 border-t border-amber-700">
-            <p className="text-sm text-amber-300">
-              © {new Date().getFullYear()} Ancient Wisdom. All rights reserved.
-            </p>
+        {/* CTA Button */}
+        <div className="text-center">
+          <button 
+            onClick={() => window.location.href = '/blogs'}
+            className="px-8 py-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          >
+            📚 View All Blogs
+          </button>
+        </div>
+
+        {/* Decorative Elements */}
+        <div className="text-center mt-12">
+          <div className="flex justify-center items-center space-x-8 text-4xl text-rose-300/50">
+            <span>📖</span>
+            <span>🌼</span>
+            <span>💫</span>
+            <span>🔥</span>
           </div>
         </div>
-      </footer> */}
-
-      <style jsx global>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
-    </div>
+      </div>
+    </section>
   );
 };
 
