@@ -65,7 +65,9 @@ export default function BlogsPage() {
                 <p className="text-rose-700 text-xl">No blogs available yet. Check back soon!</p>
               </div>
             ) : (
-              blogs.map((blog) => (
+              blogs.map((blog) => {
+                console.log('Blog ID:', blog._id, 'Title:', blog.title);
+                return (
                 <div key={blog._id} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-rose-100">
                   <div className="mb-4 rounded-xl overflow-hidden">
                     <img 
@@ -85,18 +87,19 @@ export default function BlogsPage() {
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <button 
-                      onClick={() => window.location.href = `/blogs/${blog._id}`}
-                      className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                    <Link 
+                      href={`/blogs/${blog._id}`}
+                      className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-block text-center"
                     >
                       Read More
-                    </button>
+                    </Link>
                     <div className="text-rose-400 text-sm">
                       {blog.createdAt ? new Date(blog.createdAt).toLocaleDateString() : 'Recently'}
                     </div>
                   </div>
                 </div>
-              ))
+              );
+              })
             )}
           </div>
         </div>

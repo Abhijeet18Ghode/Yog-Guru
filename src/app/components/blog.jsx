@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 const Blog = () => {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -115,12 +116,12 @@ const Blog = () => {
               </div>
               
               <div className="flex justify-between items-center">
-                <button 
-                  onClick={() => window.location.href = `/blogs/${post._id}`}
-                  className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+                <Link 
+                  href={`/blogs/${post._id}`}
+                  className="px-6 py-2 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 inline-block text-center"
                 >
                   Read More
-                </button>
+                </Link>
                 <div className="text-rose-400 text-sm">
                   {new Date(post.createdAt).toLocaleDateString()}
                 </div>
@@ -131,12 +132,12 @@ const Blog = () => {
 
         {/* CTA Button */}
         <div className="text-center">
-          <button 
-            onClick={() => window.location.href = '/blogs'}
-            className="px-8 py-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+          <Link 
+            href="/blogs"
+            className="px-8 py-4 bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 inline-block"
           >
             📚 View All Blogs
-          </button>
+          </Link>
         </div>
 
         {/* Decorative Elements */}
