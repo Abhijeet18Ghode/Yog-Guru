@@ -149,9 +149,10 @@ export default function SingleBlogPage() {
                   <span className="text-3xl mr-3">📝</span>
                   Full Article
                 </h2>
-                <div className="text-gray-700 leading-relaxed text-lg whitespace-pre-wrap">
-                  {blog.longDescription}
-                </div>
+                <div 
+                  className="text-gray-700 leading-relaxed text-lg prose prose-lg max-w-none"
+                  dangerouslySetInnerHTML={{ __html: blog.longDescription }}
+                />
               </div>
 
               {/* Blog Metadata */}

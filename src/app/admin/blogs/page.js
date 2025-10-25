@@ -248,14 +248,86 @@ export default function AdminBlogs() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Long Description
+                    Long Description (Rich Text Editor)
                   </label>
-                  <textarea
-                    value={formData.longDescription}
-                    onChange={(e) => setFormData({...formData, longDescription: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md h-32"
-                    required
+                  
+                  {/* Formatting Toolbar */}
+                  <div className="border border-gray-300 rounded-t-md bg-gray-50 p-2 flex flex-wrap gap-1">
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('bold')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100 font-bold"
+                      title="Bold"
+                    >
+                      B
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('italic')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100 italic"
+                      title="Italic"
+                    >
+                      I
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('underline')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100 underline"
+                      title="Underline"
+                    >
+                      U
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('formatBlock', false, 'h2')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100 text-lg font-bold"
+                      title="Heading"
+                    >
+                      H
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('insertUnorderedList')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100"
+                      title="Bullet List"
+                    >
+                      •
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => document.execCommand('insertOrderedList')}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100"
+                      title="Numbered List"
+                    >
+                      1.
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url = prompt('Enter link URL:');
+                        if (url) document.execCommand('createLink', false, url);
+                      }}
+                      className="px-3 py-1 bg-white border rounded hover:bg-gray-100"
+                      title="Add Link"
+                    >
+                      🔗
+                    </button>
+                  </div>
+                  
+                  {/* Rich Text Editor */}
+                  <div
+                    contentEditable
+                    suppressContentEditableWarning={true}
+                    onInput={(e) => setFormData({...formData, longDescription: e.target.innerHTML})}
+                    dangerouslySetInnerHTML={{ __html: formData.longDescription }}
+                    className="w-full min-h-[200px] px-3 py-2 border border-t-0 border-gray-300 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500 prose max-w-none"
+                    style={{ minHeight: '200px' }}
+                    placeholder="Write your blog content here..."
                   />
+                  
+                  <div className="text-xs text-gray-500 mt-1">
+                    💡 Tip: Select text and use toolbar buttons to format. You can also type HTML directly.
+                  </div>
                 </div>
 
                 <div>
